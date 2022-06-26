@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_expenses_manager/models/modern_ui.dart';
 import 'package:my_expenses_manager/models/transaction.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/filter/transaction_reader.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:provider/provider.dart';
 
 class LineChartWidget extends StatefulWidget {
@@ -95,8 +96,11 @@ class _LineChartWidgetState extends State<LineChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredData = Provider.of<TransactionsFilter>(context)
-        .getFilteredSortedTransactions();
+    Provider.of<Storage>(context);
+    final reader = TransactionReader.instance();
+    if (reader == null) return Container();
+
+    final filteredData = reader.showTransactions(descending: false);
     if (filteredData.isEmpty) {
       return SizedBox(
           height: SizeController.setHeight(0.78),

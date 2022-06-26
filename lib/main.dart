@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_expenses_manager/models/transaction.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
+import 'package:my_expenses_manager/utils/filter/transaction_reader.dart';
 import 'package:my_expenses_manager/pages/login_page.dart';
 import 'package:my_expenses_manager/pages/signup_page.dart';
 import 'package:my_expenses_manager/pages/new_transaction_page.dart';
 import 'package:my_expenses_manager/pages/setting_page.dart';
 import 'package:my_expenses_manager/pages/splash_screen.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
 import 'package:provider/provider.dart';
-import 'models/connection.dart';
-import 'models/utilities.dart';
+import 'utils/connection.dart';
+import 'utils/utilities.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized;
@@ -41,9 +42,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) =>
-          TransactionsFilter(), // you can change the storage type here
+    Storage storage = Storage();
+    TransactionReader.initReader(storage: storage);
+
+    return ChangeNotifierProvider.value(
+      value: storage, // you can change the storage type here
       child: MaterialApp(
         theme: ThemeData(primarySwatch: CustomColors.darkBlue),
         title: "Monefyte",

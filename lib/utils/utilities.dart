@@ -128,7 +128,15 @@ class Palette {
       color8,
       color9,
       color10,
-      color11
+      color11,
+      Colors.blue,
+      Colors.red,
+      Colors.brown,
+      Colors.blueGrey,
+      Colors.lime,
+      Colors.deepOrange,
+      Colors.grey,
+      Colors.purple,
     ];
   }
 }

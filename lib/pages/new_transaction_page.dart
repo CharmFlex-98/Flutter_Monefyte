@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_expenses_manager/models/transaction.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/widgets/calculator.dart';
 import 'package:my_expenses_manager/widgets/category_dropdrow_menu.dart';
 import 'package:my_expenses_manager/widgets/date_picker.dart';
@@ -55,7 +55,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
     return SizedBox(height: SizeController.setHeight(ratio));
   }
 
-  void submitData(TransactionsFilter transactionFilter) {
+  void submitData(Storage storage) {
     if (_selectedDate == null ||
         event.text.isEmpty ||
         amount.text.isEmpty ||
@@ -66,8 +66,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
       return;
     }
 
-    transactionFilter
-        .getStorage()
+    storage
         .addTransaction(
             Transaction(
                 id: transactionId ?? DateTime.now().toString(),
@@ -81,7 +80,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                 date: _selectedDate!),
             isUpdate: _isEditing)
         .then((_) {
-      transactionFilter.notify();
+      storage.notify();
       Navigator.of(context).pop();
     });
   }
@@ -158,14 +157,13 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final transactionsFilter =
-        Provider.of<TransactionsFilter>(context, listen: false);
+    final storage = Provider.of<Storage>(context, listen: false);
 
     if (ModalRoute.of(context)?.settings.arguments != null &&
         _isEditing == false) {
       _isEditing = true;
       transactionId = ModalRoute.of(context)?.settings.arguments as String;
-      import(transactionsFilter.getStorage().getTransaction(transactionId!)!);
+      import(storage.getTransaction(transactionId!)!);
     }
 
     return Scaffold(
@@ -228,7 +226,7 @@ class _NewTransactionPageState extends State<NewTransactionPage> {
                     ),
                     DatePicker(_selectDate, selectedDate: _selectedDate),
                     ElevatedButton(
-                        onPressed: () => submitData(transactionsFilter),
+                        onPressed: () => submitData(storage),
                         child: const Text("Confirm"))
                   ]),
             ),

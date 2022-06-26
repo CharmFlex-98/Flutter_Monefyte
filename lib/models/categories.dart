@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 
 class Categories {
   static final Map<String, MaterialColor> _categories = {
@@ -13,8 +13,17 @@ class Categories {
     "Transportation": Colors.cyan,
     "Travelling": Colors.pink,
     "Utilities": Colors.teal,
+    "Beauty": Colors.blue,
+    "Loan Repayment": Colors.red,
+    "Gift/Charity": Colors.brown,
+    "Rental": Colors.blueGrey,
+    "Groceries": Colors.lime,
+    "Bills": Colors.deepOrange,
+    "Investment": Colors.grey,
     "Other": Colors.deepOrange,
+    "Sports": Colors.purple,
   };
+  static List<String> _selectedCategories = [];
 
   static List<String> getCategories() {
     return [..._categories.keys];
@@ -22,5 +31,13 @@ class Categories {
 
   static Map<String, MaterialColor> getCategoryColors() {
     return {..._categories};
+  }
+
+  static List<String> selectedCategories() {
+    return _selectedCategories;
+  }
+
+  static void saveSelectedCat(List<String> categories) {
+    _selectedCategories = categories;
   }
 }

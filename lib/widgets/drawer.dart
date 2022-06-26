@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:my_expenses_manager/models/connection.dart';
-import 'package:my_expenses_manager/models/storage.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/connection.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/pages/login_page.dart';
 import 'package:my_expenses_manager/pages/setting_page.dart';
 import 'package:my_expenses_manager/widgets/loading_widget.dart';
@@ -41,8 +40,7 @@ class _SideDrawerState extends State<SideDrawer> {
   void logout() async {
     LoadingWidget.show(context);
     try {
-      Storage storage =
-          Provider.of<TransactionsFilter>(context, listen: false).getStorage();
+      Storage storage = Provider.of<Storage>(context, listen: false);
 
       await storage.sync();
       await Connection.makeConnection().request('/users/logout',
@@ -75,18 +73,17 @@ class _SideDrawerState extends State<SideDrawer> {
           });
 
       LoadingWidget.show(context);
-      TransactionsFilter transactionFilter =
-          Provider.of<TransactionsFilter>(confirmImport[1], listen: false);
+      final storage = Provider.of<Storage>(confirmImport[1], listen: false);
 
       // if rewrite
       if (!confirmImport[0]) {
-        await transactionFilter.getStorage().reWriteDataToServer();
+        await storage.reWriteDataToServer();
         Navigator.of(context).pop();
         return;
       }
 
       // if import
-      await transactionFilter.getStorage().importTransaction();
+      await storage.importTransaction();
       Navigator.of(context).pop();
     } catch (error) {
       Navigator.of(context).pop();
@@ -97,7 +94,7 @@ class _SideDrawerState extends State<SideDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<TransactionsFilter>(context);
+    Provider.of<Storage>(context);
     return Drawer(
       backgroundColor: CustomColors.darkBlue,
       child: Column(
