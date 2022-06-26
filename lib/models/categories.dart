@@ -24,9 +24,14 @@ class Categories {
     "Sports": Colors.purple,
   };
   static List<String> _selectedCategories = [];
+  static bool isInitialized = false;
 
   static List<String> getCategories() {
     return [..._categories.keys];
+  }
+
+  static List<String> getTransactionType() {
+    return ["All", "Expenses", "Income"];
   }
 
   static Map<String, MaterialColor> getCategoryColors() {
@@ -34,6 +39,11 @@ class Categories {
   }
 
   static List<String> selectedCategories() {
+    if (!isInitialized) {
+      isInitialized = true;
+      _selectedCategories.add("All");
+      return _selectedCategories;
+    }
     return _selectedCategories;
   }
 
