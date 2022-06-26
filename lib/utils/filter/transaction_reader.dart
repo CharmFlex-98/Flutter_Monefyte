@@ -38,6 +38,20 @@ class TransactionReader {
       _filters.removeWhere(
           (element) => element.filterLookup() == filter.filterLookup());
     }
+
+    // only one of the type or category filter is allow
+    // so we need to check it
+    removeReduntantFilter(filter);
+  }
+
+  void removeReduntantFilter(TransactionsFilter currentFilter) {
+    if (currentFilter.filterLookup() == "type filter") {
+      _filters.removeWhere(
+          (element) => element.filterLookup() == "category filter");
+    } else if (currentFilter.filterLookup() == "category filter") {
+      _filters
+          .removeWhere((element) => element.filterLookup() == "type filter");
+    }
   }
 
   void sortDescending(List<Transaction> transactions) {

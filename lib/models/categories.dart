@@ -38,11 +38,15 @@ class Categories {
     return {..._categories};
   }
 
+  static List<String> initialize() {
+    isInitialized = true;
+    _selectedCategories.add("All");
+    return _selectedCategories;
+  }
+
   static List<String> selectedCategories() {
     if (!isInitialized) {
-      isInitialized = true;
-      _selectedCategories.add("All");
-      return _selectedCategories;
+      return initialize();
     }
     return _selectedCategories;
   }

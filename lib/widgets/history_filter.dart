@@ -15,6 +15,7 @@ class HistoryFilter extends StatefulWidget {
 }
 
 class _HistoryFilterState extends State<HistoryFilter> {
+  bool _isInitialized = false;
   int _selectedIndex = 0;
   final List<String> buttonsText = [
     "1 month",
@@ -160,9 +161,23 @@ class _HistoryFilterState extends State<HistoryFilter> {
     );
   }
 
+// initialize date filter
+  bool initialize() {
+    _isInitialized = true;
+    final reader = TransactionReader.instance();
+    if (reader == null) return false;
+
+    reader.addFilter(DateFilter(minTime, maxTime));
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final Storage storage = Provider.of<Storage>(context, listen: false);
+    if (!_isInitialized) {
+      bool res = initialize();
+      if (!res) return Container();
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
