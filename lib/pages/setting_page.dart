@@ -1,7 +1,7 @@
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/widgets/loading_widget.dart';
 import 'package:my_expenses_manager/widgets/message_dialog.dart';
 import 'package:provider/provider.dart';
@@ -50,20 +50,18 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void format() async {
-    final transactionFilter =
-        Provider.of<TransactionsFilter>(context, listen: false);
+    final storage = Provider.of<Storage>(context, listen: false);
     LoadingWidget.show(context);
-    await transactionFilter.getStorage().removeAllTransactions();
-    transactionFilter.notify();
+    await storage.removeAllTransactions();
+    storage.notify();
     Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
 
   void applySetting() {
-    final transactionsFilter =
-        Provider.of<TransactionsFilter>(context, listen: false);
+    final storage = Provider.of<Storage>(context, listen: false);
     CurrencyFormatter.setCurrencyFormat(selectedCurrency, currencySymbol);
-    transactionsFilter.notify();
+    storage.notify();
     Navigator.of(context).pop();
   }
 

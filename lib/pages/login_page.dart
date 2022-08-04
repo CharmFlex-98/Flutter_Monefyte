@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:my_expenses_manager/models/connection.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/connection.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/pages/signup_page.dart';
 import 'package:my_expenses_manager/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void successLabel() {
     Utils.showToastMsg("Login Success!");
-    Provider.of<TransactionsFilter>(context, listen: false).notify();
+    Provider.of<Storage>(context, listen: false).notify();
     Navigator.of(context).pop();
     Navigator.of(context).pop(true);
   }

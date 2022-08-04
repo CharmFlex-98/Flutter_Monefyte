@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_expenses_manager/models/modern_ui.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/pages/new_transaction_page.dart';
 import 'package:my_expenses_manager/widgets/message_dialog.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +26,8 @@ class TransactionCard extends StatelessWidget {
       : super(key: key);
 
   void deleteTransaction(context) {
-    final transactionFilter =
-        Provider.of<TransactionsFilter>(context, listen: false);
-    transactionFilter.getStorage().removeTransaction(id);
+    final storage = Provider.of<Storage>(context, listen: false);
+    storage.removeTransaction(id);
   }
 
   Future pressDelete(BuildContext context) {

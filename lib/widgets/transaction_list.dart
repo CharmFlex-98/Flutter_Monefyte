@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_expenses_manager/models/modern_ui.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/filter/transaction_reader.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/widgets/transaction_card.dart';
 import 'package:provider/provider.dart';
 
@@ -10,8 +10,12 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final record = Provider.of<TransactionsFilter>(context)
-        .getFilteredSortedTransactions();
+    Provider.of<Storage>(context);
+    final reader = TransactionReader.instance();
+
+    if (reader == null) return Container();
+
+    final record = reader.showTransactions();
 
     return Column(children: [
       SizedBox(

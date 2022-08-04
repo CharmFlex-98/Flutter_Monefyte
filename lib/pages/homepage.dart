@@ -2,13 +2,14 @@ import 'package:draggable_fab/draggable_fab.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_expenses_manager/models/modern_ui.dart';
-import 'package:my_expenses_manager/models/storage.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:my_expenses_manager/pages/new_transaction_page.dart';
 import 'package:my_expenses_manager/widgets/drawer.dart';
+import 'package:my_expenses_manager/widgets/filter_widget.dart';
 import 'package:my_expenses_manager/widgets/line_chart_widget.dart';
 import 'package:my_expenses_manager/widgets/loading_widget.dart';
+import 'package:my_expenses_manager/widgets/stat_table.dart';
 import 'package:my_expenses_manager/widgets/transaction_list.dart';
 import 'package:provider/provider.dart';
 import '../widgets/piechart_statistic.dart';
@@ -26,12 +27,18 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _bottomTabList = [
     const PieChartStatistic(),
     const LineChartWidget(),
-    const TransactionList()
+    const TransactionList(),
+    const StatTable()
   ];
   int currentTabIndex = 0;
-  static final AppBar appbar = AppBar(
-    title: const Text("Monefyte"),
-  );
+
+  void openFilter() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const FilterWidget();
+        });
+  }
 
   void changeTab(index) {
     setState(() {
@@ -45,8 +52,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> closeAction() async {
     Fluttertoast.cancel();
-    Storage storage =
-        Provider.of<TransactionsFilter>(context, listen: false).getStorage();
+    Storage storage = Provider.of<Storage>(context, listen: false);
     Fluttertoast.showToast(
         msg: "Trying to save data on server. Please wait....");
     LoadingWidget.show(context);
@@ -80,8 +86,14 @@ class _HomePageState extends State<HomePage> {
         child: Scaffold(
           //color here
           backgroundColor: mC,
-          endDrawer: const SideDrawer(),
-          appBar: appbar,
+          drawer: const SideDrawer(),
+          appBar: AppBar(
+            title: const Text("Monefyte"),
+            actions: [
+              IconButton(
+                  onPressed: openFilter, icon: const Icon(Icons.filter_alt))
+            ],
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: [
@@ -120,6 +132,12 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.show_chart),
                   label: "Line Chart",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.receipt_long,
+                  ),
+                  label: "Expenses",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(

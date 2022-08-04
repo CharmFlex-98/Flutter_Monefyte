@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_expenses_manager/models/modern_ui.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/filter/date_filter.dart';
+import 'package:my_expenses_manager/utils/filter/transaction_reader.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:provider/provider.dart';
 
 class HistoryFilter extends StatefulWidget {
@@ -13,6 +15,7 @@ class HistoryFilter extends StatefulWidget {
 }
 
 class _HistoryFilterState extends State<HistoryFilter> {
+  bool _isInitialized = false;
   int _selectedIndex = 0;
   final List<String> buttonsText = [
     "1 month",
@@ -25,7 +28,7 @@ class _HistoryFilterState extends State<HistoryFilter> {
       DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);
   DateTime? maxTime = DateTime.now();
 
-  void _presentDatePicker(String periodType, TransactionsFilter record) {
+  void _presentDatePicker(Storage storage, String periodType) {
     showDatePicker(
             context: context,
             initialDate: maxTime != null ? maxTime! : DateTime.now(),
@@ -46,13 +49,12 @@ class _HistoryFilterState extends State<HistoryFilter> {
           maxTime = pickedDate;
         }
 
-        record.setTransactionsFilter(min: minTime, max: maxTime);
-        record.notify();
+        getFilteredData(storage, minTime, maxTime);
       });
     });
   }
 
-  void _setFixPeriod(int index, TransactionsFilter record) {
+  void _setFixPeriod(Storage storage, int index) {
     if (index == 0) {
       _selectedIndex = 0;
       minTime = DateTime(
@@ -80,13 +82,20 @@ class _HistoryFilterState extends State<HistoryFilter> {
     }
 
     setState(() {
-      record.setTransactionsFilter(min: minTime, max: maxTime);
-      record.notify();
+      getFilteredData(storage, minTime, maxTime);
     });
   }
 
-  Widget _dateTextBox(
-      DateTime? time, String periodType, TransactionsFilter record) {
+  void getFilteredData(Storage storage, DateTime? minTime, DateTime? maxTime) {
+    DateFilter dateFilter = DateFilter(minTime, maxTime);
+    TransactionReader? reader = TransactionReader.instance();
+    if (reader == null) return;
+
+    reader.addFilter(dateFilter);
+    storage.notify();
+  }
+
+  Widget _dateTextBox(Storage storage, DateTime? time, String periodType) {
     return Expanded(
       child: Row(
         children: [
@@ -113,7 +122,7 @@ class _HistoryFilterState extends State<HistoryFilter> {
             child: IconButton(
               icon: const FittedBox(child: Icon(Icons.calendar_today)),
               onPressed: () {
-                _presentDatePicker(periodType, record);
+                _presentDatePicker(storage, periodType);
               },
             ),
           ),
@@ -122,21 +131,21 @@ class _HistoryFilterState extends State<HistoryFilter> {
     );
   }
 
-  Widget _makeToggleButtons(TransactionsFilter record) {
+  Widget _makeToggleButtons(Storage storage) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         for (var i = 0; i < buttonsText.length; i++)
-          makeButton(i, buttonsText[i], record)
+          makeButton(storage, i, buttonsText[i])
       ],
     );
   }
 
-  Widget makeButton(int index, String text, TransactionsFilter record) {
+  Widget makeButton(Storage storage, int index, String text) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          _setFixPeriod(index, record);
+          _setFixPeriod(storage, index);
         },
         child: Container(
           alignment: Alignment.center,
@@ -152,15 +161,29 @@ class _HistoryFilterState extends State<HistoryFilter> {
     );
   }
 
+// initialize date filter
+  bool initialize() {
+    _isInitialized = true;
+    final reader = TransactionReader.instance();
+    if (reader == null) return false;
+
+    reader.addFilter(DateFilter(minTime, maxTime));
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final record = Provider.of<TransactionsFilter>(context, listen: false);
+    final Storage storage = Provider.of<Storage>(context, listen: false);
+    if (!_isInitialized) {
+      bool res = initialize();
+      if (!res) return Container();
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         //fix search
-        _makeToggleButtons(record),
+        _makeToggleButtons(storage),
         Container(
           height: SizeController.setHeight(0.02),
         ),
@@ -175,7 +198,7 @@ class _HistoryFilterState extends State<HistoryFilter> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _dateTextBox(minTime, "min", record),
+                  _dateTextBox(storage, minTime, "min"),
                   const Padding(
                     padding: EdgeInsets.only(right: 8.0, left: 8),
                     child: Text(
@@ -183,7 +206,7 @@ class _HistoryFilterState extends State<HistoryFilter> {
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
-                  _dateTextBox(maxTime, "max", record),
+                  _dateTextBox(storage, maxTime, "max"),
                 ],
               )),
         ),

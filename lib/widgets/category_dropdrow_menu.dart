@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_expenses_manager/models/categories.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 
 class CategoryDropDownMenu extends StatefulWidget {
   final Function _selectCategory;

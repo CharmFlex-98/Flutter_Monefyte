@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_expenses_manager/models/categories.dart';
 import 'package:my_expenses_manager/models/modern_ui.dart';
-import 'package:my_expenses_manager/models/transactions_filter.dart';
-import 'package:my_expenses_manager/models/utilities.dart';
+import 'package:my_expenses_manager/models/transaction.dart';
+import 'package:my_expenses_manager/utils/filter/transaction_reader.dart';
+import 'package:my_expenses_manager/utils/storage.dart';
+import 'package:my_expenses_manager/utils/utilities.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -116,8 +118,8 @@ class _PieChartStatisticState extends State<PieChartStatistic> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryStats =
-        Provider.of<TransactionsFilter>(context).getCategoryStats();
+    Provider.of<Storage>(context);
+    final categoryStats = getCategoryStats();
 
     return Container(
         padding: const EdgeInsets.all(10),
@@ -160,4 +162,39 @@ class _PieChartStatisticState extends State<PieChartStatistic> {
                 ),
         ));
   }
+
+  List<dynamic>? getCategoryStats() {
+    Map<String, double> categoryStats = {};
+    double total = 0;
+
+    // initialize
+    for (String category in Categories.getCategories()) {
+      categoryStats[category] = 0.0;
+    }
+
+    TransactionReader? reader = TransactionReader.instance();
+    if (reader == null) return null;
+
+    // add one by one
+    for (Transaction transaction in reader.showTransactions()) {
+      if (transaction.category == "Income") continue;
+      categoryStats[transaction.category] =
+          categoryStats[transaction.category]! + transaction.amount;
+      total += transaction.amount;
+    }
+
+    if (total == 0) return null;
+    var categoryStatsList = [];
+    categoryStats.forEach((key, value) => categoryStatsList
+        .add(CategoryStats(key, value, (value / total * 100))));
+    return categoryStatsList;
+  }
+}
+
+class CategoryStats {
+  final String category;
+  final double amount;
+  final double percentage;
+
+  CategoryStats(this.category, this.amount, this.percentage);
 }

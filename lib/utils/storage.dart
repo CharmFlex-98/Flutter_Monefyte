@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:my_expenses_manager/models/transaction.dart';
-import 'package:my_expenses_manager/models/connection.dart';
+import 'package:my_expenses_manager/utils/connection.dart';
 
-class Storage {
-  late Function notify;
+class Storage with ChangeNotifier {
   final Box<Transaction> _mainStorage = Hive.box<Transaction>('mainStorage');
   final Box<Transaction> _postStorage = Hive.box<Transaction>('postStorage');
   final Box<Transaction> _patchStorage = Hive.box<Transaction>('patchStorage');
   final Box<Transaction> _delStorage = Hive.box<Transaction>('delStorage');
 
-  void init(Function function) {
-    notify = function;
+  void notify() {
+    notifyListeners();
   }
 
   Box<Transaction> getBox() {
