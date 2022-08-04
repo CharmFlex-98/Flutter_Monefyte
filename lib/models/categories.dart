@@ -3,25 +3,24 @@ import 'package:my_expenses_manager/utils/utilities.dart';
 
 class Categories {
   static final Map<String, MaterialColor> _categories = {
+    "Beauty": Colors.blue,
     "Clothing": Colors.yellow,
     "Entertainment": Colors.green,
     "Food": Colors.lightGreen,
-    "Housing": Colors.orange,
+    "Gift/Charity": Colors.brown,
+    "Groceries": Colors.lime,
     "Insurance": Colors.indigo,
+    "Investment": Colors.grey,
+    "Housing": Colors.orange,
+    "Loan Repayment": Colors.red,
     "Medical": CustomColors.darkRed,
+    "Rental": Colors.blueGrey,
     "Self-Development": Colors.deepPurple,
+    "Sports": Colors.purple,
     "Transportation": Colors.cyan,
     "Travelling": Colors.pink,
     "Utilities": Colors.teal,
-    "Beauty": Colors.blue,
-    "Loan Repayment": Colors.red,
-    "Gift/Charity": Colors.brown,
-    "Rental": Colors.blueGrey,
-    "Groceries": Colors.lime,
-    "Bills": Colors.deepOrange,
-    "Investment": Colors.grey,
     "Other": Colors.deepOrange,
-    "Sports": Colors.purple,
   };
   static List<String> _selectedCategories = [];
   static bool isInitialized = false;

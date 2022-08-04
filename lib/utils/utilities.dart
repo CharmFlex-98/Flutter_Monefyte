@@ -104,17 +104,24 @@ class CurrencyFormatter {
 }
 
 class Palette {
-  static const color1 = Color(0xFF264653);
-  static const color2 = Color(0xFF2A9D8F);
-  static const color3 = Color(0xFFE9C46A);
-  static const color4 = Color(0xFFF4A261);
-  static const color5 = Color(0xFFE76F51);
-  static const color6 = Color(0xFF9A8C98);
-  static const color7 = Color(0xFF931F1D);
-  static const color8 = Color(0xFFEE92C2);
-  static const color9 = Color(0xFF9D6A89);
-  static const color10 = Color(0xFFD90368);
-  static const color11 = Color(0xFF2978A0);
+  static const color1 = Color(0xFF51CB20);
+  static const color2 = Color(0xFF76B041);
+  static const color3 = Color(0xFF639A88);
+  static const color4 = Color(0xFF3A5683);
+  static const color5 = Color(0xFF2708A0);
+  static const color6 = Color(0xFFC17817);
+  static const color7 = Color(0xFF291528);
+  static const color8 = Color(0xFF92DCE5);
+  static const color9 = Color(0xFF646F58);
+  static const color10 = Color(0xFF504B3A);
+  static const color11 = Color(0xFF4B3B47);
+  static const color12 = Color(0xFFF4A698);
+  static const color13 = Color(0xFFB20D30);
+  static const color14 = Color(0xFFFC6471);
+  static const color15 = Color(0xFF7D5BA6);
+  static const color16 = Color(0xFF0B6E4F);
+  static const color17 = Color(0xFF073B3A);
+  static const color18 = Color(0xFFDDB771);
 
   static List<Color> getColorPalette() {
     return [
@@ -129,14 +136,13 @@ class Palette {
       color9,
       color10,
       color11,
-      Colors.blue,
-      Colors.red,
-      Colors.brown,
-      Colors.blueGrey,
-      Colors.lime,
-      Colors.deepOrange,
-      Colors.grey,
-      Colors.purple,
+      color12,
+      color13,
+      color14,
+      color15,
+      color16,
+      color17,
+      color18
     ];
   }
 }

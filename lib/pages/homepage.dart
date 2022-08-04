@@ -9,6 +9,7 @@ import 'package:my_expenses_manager/widgets/drawer.dart';
 import 'package:my_expenses_manager/widgets/filter_widget.dart';
 import 'package:my_expenses_manager/widgets/line_chart_widget.dart';
 import 'package:my_expenses_manager/widgets/loading_widget.dart';
+import 'package:my_expenses_manager/widgets/stat_table.dart';
 import 'package:my_expenses_manager/widgets/transaction_list.dart';
 import 'package:provider/provider.dart';
 import '../widgets/piechart_statistic.dart';
@@ -26,7 +27,8 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _bottomTabList = [
     const PieChartStatistic(),
     const LineChartWidget(),
-    const TransactionList()
+    const TransactionList(),
+    const StatTable()
   ];
   int currentTabIndex = 0;
 
@@ -130,6 +132,12 @@ class _HomePageState extends State<HomePage> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.show_chart),
                   label: "Line Chart",
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.receipt_long,
+                  ),
+                  label: "Expenses",
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(

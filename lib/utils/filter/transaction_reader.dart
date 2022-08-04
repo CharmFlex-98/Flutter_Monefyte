@@ -24,6 +24,11 @@ class TransactionReader {
         1;
   }
 
+  TransactionsFilter? getFilter(String filterLookup) {
+    return _filters
+        .firstWhere((element) => element.filterLookup() == filterLookup);
+  }
+
   static TransactionReader? instance() {
     return transactionReader;
   }

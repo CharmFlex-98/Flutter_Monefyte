@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:my_expenses_manager/models/transaction.dart';
 import 'package:my_expenses_manager/utils/filter/transactions_filter.dart';
 
@@ -19,6 +20,12 @@ class DateFilter extends TransactionsFilter {
     }).toList();
 
     return record;
+  }
+
+  String getPeriodText() {
+    return (_minTime != null && _maxTime != null
+        ? '${DateFormat('yyyy-MM-dd').format(_minTime!)} ~ ${DateFormat('yyyy-MM-dd').format(_maxTime!)}'
+        : '${DateFormat('yyyy-MM-dd').format(DateTime(1970))} ~ ${DateFormat('yyyy-MM-dd').format(DateTime.now())}');
   }
 
   @override
